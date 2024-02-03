@@ -89,5 +89,16 @@
         }
       }
     }
+    a {
+      text-decoration: none;
+      color: #2d4453;
+      transition: color 0.3s ease;
+      font-size: medium;
+      font-weight: 400;
+      &:hover {
+        text-decoration: underline;
+        color: #617b8d;
+      }
+    }
   }
 }

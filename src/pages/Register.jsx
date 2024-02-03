@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaCameraRetro, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
   const [avatarFileName, setAvatarFileName] = useState(null);
@@ -32,12 +33,12 @@ const Register = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             {passwordVisible ? (
+              <FaEye className="eyeIcon" onClick={togglePasswordVisibility} />
+            ) : (
               <FaEyeSlash
                 className="eyeIcon"
                 onClick={togglePasswordVisibility}
               />
-            ) : (
-              <FaEye className="eyeIcon" onClick={togglePasswordVisibility} />
             )}
           </div>
           <input
@@ -57,7 +58,9 @@ const Register = () => {
           </label>
           <button>Sign up</button>
         </form>
-        <p>Already have an account ? Login</p>
+        <p>
+          Already have an account ? <Link to="/login">Login</Link>
+        </p>
       </div>
     </div>
   );
