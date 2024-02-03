@@ -1,8 +1,11 @@
+import Login from './pages/Login';
+import Register from './pages/Register';
+
 function App() {
   return (
     <>
-      Hello
-      <>I am Here</>
+      {/* <Register/> */}
+      <Login />
     </>
   );
 }

@@ -1,0 +1,93 @@
+.formContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  .formWrapper {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    .logo {
+      color: #385667;
+    }
+    .title {
+      margin: 20px 0;
+      font-size: 1.5rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
+      input {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: large;
+        font-weight: 400;
+        outline: none;
+        width: 100%;
+        box-sizing: border-box;
+        &::placeholder {
+          color: #ddd;
+        }
+        &:focus {
+          border: 2px solid #385667;
+        }
+      }
+      p {
+        color: rgb(240, 187, 53);
+        font-size: 0.9rem;
+        font-weight: 200;
+        margin: 0;
+        width: fit-content;
+        cursor: pointer;
+      }
+
+      label {
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        width: fit-content;
+        padding-left: 15px;
+        cursor: pointer;
+      }
+
+      .passwordWrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        input {
+          padding-right: 30px;
+        }
+        .eyeIcon {
+          position: absolute;
+          right: 10px;
+          cursor: pointer;
+        }
+      }
+
+      button {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #385667;
+        color: #fff;
+        cursor: pointer;
+        transition: 0.3s;
+        &:hover {
+          background-color: #2d4453;
+        }
+      }
+    }
+  }
+}
