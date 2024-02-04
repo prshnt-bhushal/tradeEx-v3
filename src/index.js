@@ -11,6 +11,7 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Profile from './pages/Profile';
 import NoPage from './pages/NoPage';
+import Messages from './pages/Messages';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -22,6 +23,7 @@ ReactDOM.render(
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<About />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="messages" element={<Messages />} />
         </Route>
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />

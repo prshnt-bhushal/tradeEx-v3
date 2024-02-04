@@ -26,18 +26,18 @@ const App = () => {
       <head>
         <title>{getTitle()}</title>
       </head>
-      <div className="h-screen justify-between flex flex-col">
+      <div className="container">
         <NavBar />
-        <div className="flex flex-grow overflow-y-scroll">
+        <div>
           <Outlet />
         </div>
-        <footer className="bg-gray-200 text-center text-xs p-3">
+        {/* <footer className="bg-gray-200 text-center text-xs p-3">
           &copy; {new Date().getFullYear()} TradeEx - All Rights Reserved
           <span className="text-blue-500 hover:text-blue-600">
             {' '}
             | <a href="/terms-condition">Terms & Conditions</a>
           </span>
-        </footer>
+        </footer> */}
       </div>
     </>
   );
