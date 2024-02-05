@@ -1,45 +1,47 @@
-import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-import NavBar from './components/NavBar';
+import React, { useContext } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
+import Contact from './pages/Contact';
+import About from './pages/About';
+import Profile from './pages/Profile';
+import Messages from './pages/Messages';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import NoPage from './pages/NoPage';
+import Layout from './components/Layout';
+import { AuthContext } from './contexts/AuthContext';
 
 const App = () => {
-  const location = useLocation();
-  const getTitle = () => {
-    const { pathname } = location;
+  const { currentUser } = useContext(AuthContext);
 
-    switch (pathname) {
-      case '/':
-        return 'Home - TradeEx';
-      case '/contact':
-        return 'Contact - TradeEx';
-      case '/about':
-        return 'About Us - TradeEx';
-      case '/profile':
-        return 'profile - TradeEx';
-      default:
-        return 'TradeEx';
+  const PrivateRoute = ({ children }) => {
+    if (!currentUser) {
+      return <Navigate to="/login" />;
     }
+    return children;
   };
-
   return (
-    <>
-      <head>
-        <title>{getTitle()}</title>
-      </head>
-      <div className="container">
-        <NavBar />
-        <div>
-          <Outlet />
-        </div>
-        {/* <footer className="bg-gray-200 text-center text-xs p-3">
-          &copy; {new Date().getFullYear()} TradeEx - All Rights Reserved
-          <span className="text-blue-500 hover:text-blue-600">
-            {' '}
-            | <a href="/terms-condition">Terms & Conditions</a>
-          </span>
-        </footer> */}
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="about" element={<About />} />
+          <Route path="profile" element={<Profile />} />
+          <Route
+            path="messages"
+            element={
+              <Messages />
+              // <PrivateRoute>
+              // </PrivateRoute>
+            }
+          />
+        </Route>
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="*" element={<NoPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

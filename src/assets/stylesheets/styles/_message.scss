@@ -7,11 +7,12 @@
     // align-items: center;
     width: 100%;
     height: 100%;
+    overflow: hidden;
     .chatBox {
       flex: 1;
       padding: 15px;
+      overflow-y: scroll;
       background-color: #cecece;
-      overflow: hidden;
       .title {
         font-weight: bold;
         font-size: 1.5rem;
@@ -24,7 +25,6 @@
         }
       }
       .chats {
-        overflow: scroll;
         .userChat {
           display: flex;
           align-items: center;
@@ -124,7 +124,7 @@
       }
       .conversation {
         height: calc(100% - 130px);
-        overflow: scroll;
+        overflow-y: scroll;
         .message {
           display: flex;
           gap: 10px;

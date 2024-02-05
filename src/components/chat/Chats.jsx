@@ -18,7 +18,7 @@ function Chats() {
           <p>Hello</p>
         </div>
       </div>
-      <div className="userChat">
+      {/* <div className="userChat">
         <img src={logo} alt="user avatar" />
         <div className="userChatInfo">
           <span>User Name</span>
@@ -38,8 +38,8 @@ function Chats() {
           <span>User Name</span>
           <p>Hello</p>
         </div>
-      </div>
-      <div className="userChat">
+      </div> */}
+      {/* <div className="userChat">
         <img src={logo} alt="user avatar" />
         <div className="userChatInfo">
           <span>User Name</span>
@@ -52,7 +52,7 @@ function Chats() {
           <span>User Name</span>
           <p>Hello</p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
