@@ -27,34 +27,57 @@ const Register = () => {
     const email = event.target[1].value;
     const password = event.target[2].value;
     const avatar = event.target[3].files[0];
+
     try {
+      // Create user with email and password
       const res = await createUserWithEmailAndPassword(auth, email, password);
+
+      // Upload avatar
       const storageRef = ref(storage, username);
       const uploadTask = uploadBytesResumable(storageRef, avatar);
 
       uploadTask.on(
         (error) => {
-          setErr(true);
+          // Handle upload error
+          console.error('Upload error:', error);
+          setErr(true); // Set error state if needed
         },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+        async () => {
+          // Upload completed successfully
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+            // Update user profile
             await updateProfile(res.user, {
               displayName: username,
               photoURL: downloadURL,
             });
+
+            // Set user data in Firestore
             await setDoc(doc(db, 'users', res.user.uid), {
               uid: res.user.uid,
               displayName: username,
               email,
               photoURL: downloadURL,
             });
+
+            // Set user chat data in Firestore if needed
             await setDoc(doc(db, 'userChats', res.user.uid), {});
+
+            // Redirect or navigate to the desired location
+            // Assuming you have the 'navigate' function available
             navigate('/');
-          });
+          } catch (profileUpdateError) {
+            // Handle profile update error
+            console.error('Profile update error:', profileUpdateError);
+            setErr(true); // Set error state if needed
+          }
         }
       );
-    } catch (err) {
-      setErr(true);
+    } catch (signupError) {
+      // Handle signup error
+      console.error('Signup error:', signupError);
+      setErr(true); // Set error state if needed
     }
   };
 
