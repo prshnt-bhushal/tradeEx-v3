@@ -7,19 +7,35 @@ import { db } from '../../firebase';
 function Conversation() {
   const [messages, setMessages] = useState([]);
   const { data } = useContext(ChatContext);
+  console.log(data.chatId);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(doc(db, 'chats', data.chatId), (doc) => {
-      doc.exists() && setMessages(doc.data().messages);
-    });
-    return () => unsubscribe();
-  }, [data.chatId]);
+    // Only subscribe to messages if chatId is defined
+    if (data.chatId) {
+      const documentRef = doc(db, 'chats', data.chatId);
+      const unsubscribe = onSnapshot(documentRef, (doc) => {
+        if (doc.exists()) {
+          const docData = doc.data();
+          setMessages(docData.messages || []);
+        } else {
+          setMessages([]);
+        }
+      });
 
+      return () => {
+        unsubscribe(); // Cleanup function to unsubscribe when component unmounts
+      };
+    }
+  }, [data.chatId]);
   return (
     <div className="conversation">
-      {messages?.map((message) => (
-        <Message key={message.id} message={message} />
-      ))}
+      {messages.length > 0 ? (
+        messages.map((message) => (
+          <Message key={message.id} message={message} />
+        ))
+      ) : (
+        <p>No messages yet.</p>
+      )}
     </div>
   );
 }

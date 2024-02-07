@@ -11,7 +11,7 @@ import {
 } from 'firebase/firestore';
 import { db, storage } from '../../firebase';
 import { v4 as uuid } from 'uuid';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 function SendMessage() {
   const [text, setText] = useState('');
   const [image, setImage] = useState(null);
@@ -22,33 +22,20 @@ function SendMessage() {
   const handleSend = async () => {
     if (image) {
       const storageRef = ref(storage, `chatImages/${image.name}`);
-
-      const uploadTask = uploadBytesResumable(storageRef, image);
-      uploadTask.on(
-        'state_changed',
-        (error) => {
-          // Handle upload error
-          console.error('Upload error:', error);
-        },
-        async () => {
-          // Upload completed successfully
-          try {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            await updateDoc(doc(db, 'chats', data.chatId), {
-              messages: arrayUnion({
-                id: uuid(),
-                text,
-                senderId: currentUser.uid,
-                date: Timestamp.now(),
-                imageUrl: downloadURL,
-              }),
-            });
-          } catch (sendImageError) {
-            // Handle profile update error
-            console.error('Profile update error:', sendImageError);
-          }
-        }
-      );
+      uploadBytes(storageRef, image).then((snapshot) => {
+        getDownloadURL(storageRef, image).then(async (url) => {
+          const downloadURL = url;
+          await updateDoc(doc(db, 'chats', data.chatId), {
+            messages: arrayUnion({
+              id: uuid(),
+              text,
+              senderId: currentUser.uid,
+              date: Timestamp.now(),
+              imageUrl: downloadURL,
+            }),
+          });
+        });
+      });
     } else {
       await updateDoc(doc(db, 'chats', data.chatId), {
         messages: arrayUnion({

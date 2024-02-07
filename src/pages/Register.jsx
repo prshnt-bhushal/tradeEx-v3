@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { FaCameraRetro, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth, db, storage } from '../firebase';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import { doc, setDoc } from 'firebase/firestore';
 const Register = () => {
   const [err, setErr] = useState(false);
@@ -30,50 +30,31 @@ const Register = () => {
 
     try {
       // Create user with email and password
+      // Upload avatar
+      if (avatar === undefined) {
+        return setErr(true);
+      }
       const res = await createUserWithEmailAndPassword(auth, email, password);
 
-      // Upload avatar
-      const storageRef = ref(storage, username);
-      const uploadTask = uploadBytesResumable(storageRef, avatar);
+      const storageRef = ref(storage, `avatars/${res.user.uid}`);
+      uploadBytes(storageRef, avatar).then((snapshot) => {
+        getDownloadURL(storageRef, avatar).then(async (url) => {
+          const downloadURL = url;
+          await updateProfile(res.user, {
+            displayName: username,
+            photoURL: downloadURL,
+          });
 
-      uploadTask.on(
-        (error) => {
-          // Handle upload error
-          console.error('Upload error:', error);
-          setErr(true); // Set error state if needed
-        },
-        async () => {
-          // Upload completed successfully
-          try {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-
-            // Update user profile
-            await updateProfile(res.user, {
-              displayName: username,
-              photoURL: downloadURL,
-            });
-
-            // Set user data in Firestore
-            await setDoc(doc(db, 'users', res.user.uid), {
-              uid: res.user.uid,
-              displayName: username,
-              email,
-              photoURL: downloadURL,
-            });
-
-            // Set user chat data in Firestore if needed
-            await setDoc(doc(db, 'userChats', res.user.uid), {});
-
-            // Redirect or navigate to the desired location
-            // Assuming you have the 'navigate' function available
-            navigate('/');
-          } catch (profileUpdateError) {
-            // Handle profile update error
-            console.error('Profile update error:', profileUpdateError);
-            setErr(true); // Set error state if needed
-          }
-        }
-      );
+          await setDoc(doc(db, 'users', res.user.uid), {
+            uid: res.user.uid,
+            displayName: username,
+            email,
+            photoURL: downloadURL,
+          });
+          await setDoc(doc(db, 'userChats', res.user.uid), {});
+          navigate('/');
+        });
+      });
     } catch (signupError) {
       // Handle signup error
       console.error('Signup error:', signupError);

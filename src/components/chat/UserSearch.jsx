@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react';
-import logo from '../../assets/img/logo.png';
 import {
   collection,
   doc,

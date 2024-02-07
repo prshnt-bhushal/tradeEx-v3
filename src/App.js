@@ -33,9 +33,9 @@ const App = () => {
           <Route
             path="messages"
             element={
-              <Messages />
-              // <PrivateRoute>
-              // </PrivateRoute>
+              <PrivateRoute>
+                <Messages />
+              </PrivateRoute>
             }
           />
         </Route>

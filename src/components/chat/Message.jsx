@@ -1,16 +1,28 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { ChatContext } from '../../contexts/ChatContext';
 
 function Message({ message }) {
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
+  const [messageTime, setMessageTime] = useState('');
 
   const ref = useRef();
 
   useEffect(() => {
     ref.current.scrollIntoView({ behavior: 'smooth' });
   }, [message]);
+
+  useEffect(() => {
+    // Convert Firestore Timestamp to JavaScript Date
+    const timestamp = message.date.toDate();
+
+    // Format time using toLocaleTimeString method
+    setMessageTime(
+      timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    );
+  }, [message.date]);
+
   return (
     <div
       ref={ref}
@@ -25,7 +37,7 @@ function Message({ message }) {
           }
           alt="userProfile"
         />
-        <div className="messageTimestamp">11:00</div>
+        <div className="messageTimestamp">{messageTime}</div>
       </div>
       <div className="messageContent">
         <p className="messageText">{message.text}</p>

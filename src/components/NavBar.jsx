@@ -12,8 +12,8 @@ const NavBar = () => {
   function handleLogout() {
     signOut(auth).then(() => {
       alert('User signed out');
+      navigate('/login');
     });
-    navigate('/login');
   }
   return (
     <nav>
