@@ -6,12 +6,12 @@ function Layout() {
   return (
     <div className="container">
       <NavBar />
-      <div className='hello'>
+      <div className="hello">
         <Outlet />
       </div>
-      <footer>
+      {/* <footer>
         &copy; {new Date().getFullYear()} TradeEx - All Rights Reserved
-      </footer>
+      </footer> */}
     </div>
   );
 }

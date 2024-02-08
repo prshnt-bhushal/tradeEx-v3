@@ -27,7 +27,7 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  // justify-content: space-between;
   nav {
     display: flex;
     position: sticky;
@@ -59,9 +59,13 @@ body {
       display: flex;
       gap: 10px;
       align-items: center;
+      .user-name {
+        color: #fff;
+        cursor: pointer;
+      }
       img {
-        width: 24px;
-        height: 24px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         object-fit: cover;
         border: 1px solid #fff;
@@ -72,5 +76,35 @@ body {
         font-weight: 500;
       }
     }
+    .menu-button {
+      position: relative;
+      background-color: transparent;
+      border: none;
+    }
+    .custom-menu-items {
+      position: absolute;
+      background-color: #fff;
+      border: 1px solid;
+      border-radius: 10px 0px 10px 10px;
+      // box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.1);
+      top: 46px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      right: 60px;
+      .menu-link {
+        padding: 10px 20px;
+        text-align: left;
+        outline: none;
+        color: #2d4453;
+        &:hover {
+          background-color: #3498db;
+          color: #fff;
+          text-decoration: none;
+        }
+      }
+    }
   }
 }
+
+@import './pages/profile.scss';

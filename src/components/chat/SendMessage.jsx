@@ -20,32 +20,33 @@ function SendMessage() {
   const { data } = useContext(ChatContext);
 
   const handleSend = async () => {
-    if (image) {
-      const storageRef = ref(storage, `chatImages/${image.name}`);
-      uploadBytes(storageRef, image).then((snapshot) => {
-        getDownloadURL(storageRef, image).then(async (url) => {
-          const downloadURL = url;
-          await updateDoc(doc(db, 'chats', data.chatId), {
-            messages: arrayUnion({
-              id: uuid(),
-              text,
-              senderId: currentUser.uid,
-              date: Timestamp.now(),
-              imageUrl: downloadURL,
-            }),
-          });
-        });
-      });
-    } else {
-      await updateDoc(doc(db, 'chats', data.chatId), {
-        messages: arrayUnion({
-          id: uuid(),
-          text,
-          senderId: currentUser.uid,
-          date: Timestamp.now(),
-        }),
-      });
-    }
+    setText('');
+    // if (image) {
+    //   const storageRef = ref(storage, `chatImages/${image.name}`);
+    //   uploadBytes(storageRef, image).then((snapshot) => {
+    //     getDownloadURL(storageRef, image).then(async (url) => {
+    //       const downloadURL = url;
+    //       await updateDoc(doc(db, 'chats', data.chatId), {
+    //         messages: arrayUnion({
+    //           id: uuid(),
+    //           text,
+    //           senderId: currentUser.uid,
+    //           date: Timestamp.now(),
+    //           imageUrl: downloadURL,
+    //         }),
+    //       });
+    //     });
+    //   });
+    // } else {
+    await updateDoc(doc(db, 'chats', data.chatId), {
+      messages: arrayUnion({
+        id: uuid(),
+        text,
+        senderId: currentUser.uid,
+        date: Timestamp.now(),
+      }),
+    });
+    // }
 
     await updateDoc(doc(db, 'userChats', currentUser.uid), {
       [data.chatId + '.lastMessage']: {
@@ -60,12 +61,11 @@ function SendMessage() {
       [data.chatId + '.date']: serverTimestamp(),
     });
 
-    setText('');
-    setImage(null);
+    // setImage(null);
   };
   return (
     <div className="sendMessage">
-      <input
+      {/* <input
         style={{ display: 'none' }}
         type="file"
         name="sendpic"
@@ -75,11 +75,16 @@ function SendMessage() {
       />
       <label for="sendpic">
         <FaCameraRetro size={25} />
-      </label>
+      </label> */}
       <input
         type="text"
         placeholder="Type Something... "
         value={text}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleSend();
+          }
+        }}
         onChange={(e) => setText(e.target.value)}
       />
       <button onClick={handleSend}>Send</button>
