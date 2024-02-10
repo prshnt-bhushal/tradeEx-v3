@@ -5,6 +5,10 @@ import { AuthContext } from '../contexts/AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { Menu } from '@headlessui/react';
+import { FaRegMessage, FaRegUser } from 'react-icons/fa6';
+import { IoSettingsOutline } from 'react-icons/io5';
+import { TbHelpSquare } from 'react-icons/tb';
+import { BiLogOut } from 'react-icons/bi';
 
 const NavBar = () => {
   const { currentUser } = useContext(AuthContext);
@@ -45,7 +49,7 @@ const NavBar = () => {
                       }`}
                     >
                       <span className="flex gap-2 items-center">
-                        <i className="fa-solid fa-user"></i>
+                        <FaRegUser />
                         Profile
                       </span>
                     </Link>
@@ -60,7 +64,7 @@ const NavBar = () => {
                       }`}
                     >
                       <span className="flex gap-2 items-center">
-                        <i className="fa-regular fa-message"></i>
+                        <FaRegMessage size={16} />
                         Messages
                       </span>
                     </Link>
@@ -75,7 +79,7 @@ const NavBar = () => {
                       }`}
                     >
                       <span className="flex gap-2 items-center">
-                        <i className="fa-solid fa-gear"></i>
+                        <IoSettingsOutline />
                         Settings
                       </span>
                     </Link>
@@ -90,7 +94,7 @@ const NavBar = () => {
                       }`}
                     >
                       <span className="flex gap-2 items-center">
-                        <i className="fa-solid fa-circle-info"></i>
+                        <TbHelpSquare />
                         Help
                       </span>
                     </Link>
@@ -105,7 +109,7 @@ const NavBar = () => {
                       onClick={handleLogout}
                     >
                       <span className="flex gap-2 items-center">
-                        <i className="fa-solid fa-right-from-bracket"></i>
+                        <BiLogOut />
                         Logout
                       </span>
                     </Link>
