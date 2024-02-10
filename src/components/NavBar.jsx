@@ -48,7 +48,7 @@ const NavBar = () => {
                         active ? 'bg-blue-500 text-white' : 'text-black'
                       }`}
                     >
-                      <span className="flex gap-2 items-center">
+                      <span className="box">
                         <FaRegUser />
                         Profile
                       </span>
@@ -63,7 +63,7 @@ const NavBar = () => {
                         active ? 'bg-blue-500 text-white' : 'text-black'
                       }`}
                     >
-                      <span className="flex gap-2 items-center">
+                      <span className="box">
                         <FaRegMessage size={16} />
                         Messages
                       </span>
@@ -78,7 +78,7 @@ const NavBar = () => {
                         active ? 'bg-blue-500 text-white' : 'text-black'
                       }`}
                     >
-                      <span className="flex gap-2 items-center">
+                      <span className="box">
                         <IoSettingsOutline />
                         Settings
                       </span>
@@ -93,7 +93,7 @@ const NavBar = () => {
                         active ? 'bg-blue-500 text-white' : 'text-black'
                       }`}
                     >
-                      <span className="flex gap-2 items-center">
+                      <span className="box">
                         <TbHelpSquare />
                         Help
                       </span>
@@ -108,7 +108,7 @@ const NavBar = () => {
                       }`}
                       onClick={handleLogout}
                     >
-                      <span className="flex gap-2 items-center">
+                      <span className="box">
                         <BiLogOut />
                         Logout
                       </span>

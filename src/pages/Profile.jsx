@@ -1,12 +1,36 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MdFileUpload } from 'react-icons/md';
 import UploadPostDialog from '../components/UploadPostDailog';
 import { AuthContext } from '../contexts/AuthContext';
-import UploadBookCard from '../components/cards/UploadBookCard';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { db } from '../firebase';
+import BookCard from '../components/cards/BookCards';
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
-  console.log(currentUser);
+  const [postedBooks, setPostedBooks] = useState([]);
+
+  useEffect(() => {
+    const getPostedBooks = () => {
+      const postRef = collection(db, 'books');
+      const q = query(postRef, where('postedUserId', '==', currentUser.uid));
+      onSnapshot(q, (snapshot) => {
+        const pos = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setPostedBooks(pos);
+      });
+
+      return () => {
+        setPostedBooks([]);
+      };
+    };
+
+    currentUser.uid && getPostedBooks();
+  }, [currentUser.uid]);
+  console.log(postedBooks);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const openDialog = () => {
     setIsDialogOpen(true);
@@ -17,26 +41,20 @@ const Profile = () => {
   };
   return (
     <div className="profileContainer">
-      <h1>Profile</h1>
       <div className="profile-wrapper">
         <div className="content-upload-btn" onClick={openDialog}>
           <MdFileUpload size={24} />
           Upload
         </div>
-        <div className="profile-container">
-          <div className="profile-image">
-            <img src={currentUser.photoURL} alt="profile" />
+        <div className="HomeContainer">
+          <h2>Uploaded Books</h2>
+          <div className="BookContainer">
+            {postedBooks.length > 0 ? (
+              postedBooks.map((book) => <BookCard key={book.id} book={book} />)
+            ) : (
+              <p>No books uploaded yet</p>
+            )}
           </div>
-          <div className="profile-details">
-            <h2>John Doe</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
-        </div>
-        <div className="uploadedcard">
-          <UploadBookCard />
         </div>
       </div>
       <UploadPostDialog isOpen={isDialogOpen} onClose={closeUploadDialog} />

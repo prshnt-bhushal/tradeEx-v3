@@ -91,6 +91,7 @@ const Register = () => {
             style={{ display: 'none' }}
             type="file"
             id="avatar"
+            required
             accept=".jpg, .jpeg, .png, .gif"
             onChange={handleFileChange}
           />

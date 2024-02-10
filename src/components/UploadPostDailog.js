@@ -1,16 +1,66 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { FaCameraRetro } from 'react-icons/fa';
+// import BookCategoryList from './BookCategoryList';
+import { db, storage } from '../firebase';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { AuthContext } from '../contexts/AuthContext';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 function UploadPostDialog({ isOpen, onClose }) {
-  const [postTitle, setPostTitle] = useState('');
+  const { currentUser } = useContext(AuthContext);
   const [bookName, setBookName] = useState(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    // Handle the form submission logic here
-    // You can send the postTitle to your backend or perform any other actions
-    console.log('Post Title:', postTitle);
-    // Close the dialog after submission
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const book_name = event.target[0].value;
+    const book_author = event.target[1].value;
+    const book_category = event.target[2].value;
+    const book_publication = event.target[3].value;
+    const book_image = event.target[4].files[0];
+
+    try {
+      if (book_image === undefined) {
+        return console.log('cover is undefined');
+      }
+      const storageRef = ref(storage, `books/${book_image.name}`);
+      uploadBytes(storageRef, book_image)
+        .then((snapshot) => {
+          getDownloadURL(storageRef).then((url) => {
+            const imgUrl = url;
+
+            const dataObject = {
+              bookName: book_name,
+              category: book_category,
+              author: book_author,
+              publication: book_publication,
+              postedUserId: currentUser.uid,
+              postedUser: currentUser.displayName,
+              postUrl: imgUrl,
+              postedDate: serverTimestamp(),
+            };
+
+            const docRef = collection(db, 'books');
+            addDoc(docRef, dataObject)
+              .then((userRef) => {
+                alert('Product Uploaded Successfully');
+                navigate('/profile');
+              })
+              .catch((error) => {
+                alert(error.message);
+                // setIsLoading(false);
+              });
+          });
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
     onClose();
   };
 
@@ -22,15 +72,6 @@ function UploadPostDialog({ isOpen, onClose }) {
   return (
     <Dialog open={isOpen} onClose={onClose} className="dialogContainer">
       <div className="dialogWrapper">
-        {/* <Dialog.Overlay className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" />
-
-        <span
-          className="hidden sm:inline-block sm:align-middle sm:h-screen"
-          aria-hidden="true"
-        >
-          &#8203;
-        </span> */}
-
         <Dialog.Panel className="dialog-panel">
           <Dialog.Title as="h3" className="title">
             Upload Post
@@ -41,9 +82,7 @@ function UploadPostDialog({ isOpen, onClose }) {
               type="text"
               id="bookName"
               name="bookName"
-              value={postTitle}
-              onChange={(e) => setPostTitle(e.target.value)}
-              className="mt-1 p-3 w-full border border-gray-300 rounded-md"
+              // onChange={(e) => setPostTitle(e.target.value)}
               placeholder="Enter Book Name"
               required
             />
@@ -51,10 +90,37 @@ function UploadPostDialog({ isOpen, onClose }) {
               type="text"
               id="bookAuthor"
               name="bookAuthor"
-              value={postTitle}
-              onChange={(e) => setPostTitle(e.target.value)}
-              className="mt-1 p-3 w-full border border-gray-300 rounded-md"
+              // onChange={(e) => setPostTitle(e.target.value)}
               placeholder="Author's Name"
+              required
+            />
+            {/* <BookCategoryList /> */}
+            <select
+              required
+              id="select-category"
+              // onChange={(e) => setSelectValue(e.target.value)}
+            >
+              <option value="none" selected disabled hidden>
+                Category
+              </option>
+              <option>Novel</option>
+              <option>Manga</option>
+              <option>Thriller</option>
+              <option>Educational</option>
+              <option>Bussiness</option>
+              <option>History</option>
+              <option>Biography</option>
+              <option>Mystery</option>
+              <option>Fiction</option>
+              <option>Fantasy</option>
+              <option>Others</option>
+            </select>
+            <input
+              type="text"
+              id="bookPublication"
+              name="bookPublication"
+              // onChange={(e) => setPostTitle(e.target.value)}
+              placeholder="Publication"
               required
             />
             <input
@@ -70,27 +136,6 @@ function UploadPostDialog({ isOpen, onClose }) {
                 {bookName ? `Book: ${bookName}` : 'Upload Book Image'}
               </span>
             </label>
-            <input
-              type="text"
-              id="bookPublication"
-              name="bookPublication"
-              value={postTitle}
-              onChange={(e) => setPostTitle(e.target.value)}
-              className="mt-1 p-3 w-full border border-gray-300 rounded-md"
-              placeholder="Publication"
-              required
-            />
-
-            <textarea
-              type="textarea"
-              id="bookDescription"
-              name="bookDescription"
-              value={postTitle}
-              onChange={(e) => setPostTitle(e.target.value)}
-              className="mt-1 p-3 resize-none w-full border border-gray-300 rounded-md"
-              placeholder="Description"
-              required
-            />
 
             <div className="btn-collection">
               <button type="button" className="cancel" onClick={onClose}>
