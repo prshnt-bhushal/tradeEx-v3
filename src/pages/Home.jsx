@@ -33,7 +33,9 @@ const Home = () => {
     .filter(
       (book) =>
         !userPostedBookIds.includes(book.id) &&
-        book.bookName.toLowerCase().includes(searchTerm.toLowerCase())
+        (book.bookName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          book.category.toLowerCase().includes(searchTerm.toLowerCase()))
     )
     .sort((a, b) =>
       sortByRecent
