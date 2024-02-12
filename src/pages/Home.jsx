@@ -1,42 +1,69 @@
 import React, { useContext, useEffect, useState } from 'react';
-import BookCard from '../components/cards/BookCards';
+import BookCard from '../components/cards/BookCard';
 import { AuthContext } from '../contexts/AuthContext';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
+import BookSearch from '../components/BookSearch';
 
 const Home = () => {
   const { currentUser } = useContext(AuthContext);
   const [postedBooks, setPostedBooks] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortByRecent, setSortByRecent] = useState(true); // State to track sorting preference
 
   useEffect(() => {
-    const getPostedBooks = () => {
-      const postRef = collection(db, 'books');
-      const q = query(postRef, where('postedUserId', '!=', currentUser.uid));
-      onSnapshot(q, (snapshot) => {
-        const pos = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setPostedBooks(pos);
-      });
+    const unsubscribe = onSnapshot(collection(db, 'books'), (snapshot) => {
+      const booksData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setPostedBooks(booksData);
+    });
 
-      return () => {
-        setPostedBooks([]);
-      };
-    };
+    return () => unsubscribe();
+  }, []);
 
-    currentUser.uid && getPostedBooks();
-  }, [currentUser.uid]);
+  const userPostedBookIds = postedBooks
+    .filter(
+      (book) => book.postedUserId === (currentUser ? currentUser.uid : null)
+    )
+    .map((book) => book.id);
+
+  const filteredBooks = postedBooks
+    .filter(
+      (book) =>
+        !userPostedBookIds.includes(book.id) &&
+        book.bookName.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) =>
+      sortByRecent
+        ? b.postedDate.seconds - a.postedDate.seconds
+        : a.postedDate.seconds - b.postedDate.seconds
+    );
+
+  // Function to toggle sorting preference
+  const toggleSortPreference = () => {
+    setSortByRecent((prevSortByRecent) => !prevSortByRecent);
+  };
+
+  const renderBookCard = (book) => {
+    return <BookCard key={book.id} book={book} />;
+  };
+
   return (
     <div className="HomeContainer">
       <section className="Banner">
         <h1>Bookstore</h1>
-        <p>Find your next favorite book</p>
+        <BookSearch
+          setSearchTerm={setSearchTerm}
+          sortByRecent={sortByRecent}
+          toggleSortPreference={toggleSortPreference}
+        />
         <div className="BookContainer">
-          {postedBooks.length > 0 ? (
-            postedBooks.map((book) => <BookCard key={book.id} book={book} />)
+          {filteredBooks.length > 0 ? (
+            filteredBooks.map((book) => renderBookCard(book))
           ) : (
-            <p>No books uploaded yet</p>
+            <p>No books found</p>
           )}
         </div>
       </section>

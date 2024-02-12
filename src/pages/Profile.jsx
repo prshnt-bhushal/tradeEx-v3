@@ -4,7 +4,7 @@ import UploadPostDialog from '../components/UploadPostDailog';
 import { AuthContext } from '../contexts/AuthContext';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
-import BookCard from '../components/cards/BookCards';
+import BookCard from '../components/cards/BookCard';
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
