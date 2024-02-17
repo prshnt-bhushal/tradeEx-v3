@@ -83,44 +83,44 @@ function BookCard({ book }) {
   };
 
   return (
-    <div className="product">
+    <Link to={`/book`} className="product">
       <img src={book.postUrl} alt="Book" className="product-image" />
       <div className="product-details">
-        <div className="grid-grow">
-          <h2 className="product-title">{book.bookName}</h2>
-          <p className="product-category">{book.category}</p>
-          <p className="product-author">{book.author}</p>
-          <p className="product-publication">{book.publication}</p>
-          <div className="product-posted-by">posted by: {book.postedUser}</div>
-        </div>
-        <div className="product-actions">
-          {currentUser && currentUser.uid === book.postedUserId ? (
-            <>
-              <Link to={`/edit/`} className="action-link">
-                <FaRegEdit size={16} />
-              </Link>
-              <Link to={`/delete/`} className="action-link">
-                <FaRegTrashAlt size={16} />
-              </Link>
-            </>
-          ) : (
-            <>
-              <span className="action-link" onClick={handleSelect}>
-                <FaRegMessage size={16} />
-              </span>
-
-              <Link to={`/exchange:`} className="action-link">
-                <LiaExchangeAltSolid size={16} />
-              </Link>
-            </>
-          )}
-          <Link to={`/share/`} className="action-link">
-            <RiShareForward2Fill size={16} />
-          </Link>
-        </div>
+        <h2 className="product-title">{book.bookName}</h2>
+        <p className="product-author">{book.author}</p>
+        <p className="product-category">{book.category}</p>
       </div>
-    </div>
+    </Link>
   );
 }
 
+{
+  /* <div className="product-actions">
+  <p className="product-publication">{book.publication}</p>
+  <div className="product-posted-by">posted by: {book.postedUser}</div>
+  {currentUser && currentUser.uid === book.postedUserId ? (
+    <>
+      <Link to={`/edit/`} className="action-link">
+        <FaRegEdit size={16} />
+      </Link>
+      <Link to={`/delete/`} className="action-link">
+        <FaRegTrashAlt size={16} />
+      </Link>
+    </>
+  ) : (
+    <>
+      <span className="action-link" onClick={handleSelect}>
+        <FaRegMessage size={16} />
+      </span>
+
+      <Link to={`/exchange:`} className="action-link">
+        <LiaExchangeAltSolid size={16} />
+      </Link>
+    </>
+  )}
+  <Link to={`/share/`} className="action-link">
+    <RiShareForward2Fill size={16} />
+  </Link>
+</div> */
+}
 export default BookCard;

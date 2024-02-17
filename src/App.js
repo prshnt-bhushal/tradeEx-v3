@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import NoPage from './pages/NoPage';
 import Layout from './components/Layout';
 import { AuthContext } from './contexts/AuthContext';
+import BookDetails from './components/BookDetails';
 
 const App = () => {
   const { currentUser } = useContext(AuthContext);
@@ -27,6 +28,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="book" element={<BookDetails />} />
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<About />} />
           <Route

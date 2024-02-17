@@ -50,6 +50,99 @@
     // gap: 5px;
     grid-template-columns: repeat(4, 1fr);
   }
+
+  // Book detail page
+  .backButton {
+    width: fit-content;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    margin: 5px 0;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+
+    &:hover {
+      background-color: #f5f5f5;
+      transform: translateX(-5px);
+    }
+    &:active {
+      transform: translateX(5px);
+    }
+  }
+  .BookDetails {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    align-items: flex-start;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+
+    .BookImage {
+      width: 320px;
+      aspect-ratio: 4/6;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+
+    .BookDetails-info {
+      flex: 1;
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      justify-content: space-between;
+
+      h2 {
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      span {
+        color: #666;
+        margin: 1px 0;
+      }
+
+      p {
+        margin: 10px 0;
+        color: #555;
+      }
+    }
+    .book-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+
+      .action-link {
+        color: #666;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #333;
+        }
+      }
+    }
+
+    .user-details {
+      display: flex;
+      gap: 5px;
+
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+
+      p {
+        color: #888;
+        margin: 0;
+      }
+    }
+  }
 }
 // Product.scss
 
@@ -57,7 +150,7 @@
   margin: 0.75rem;
   position: relative;
   width: 220px;
-  height: 350px;
+  aspect-ratio: 4/6;
   border-radius: 0.5rem;
   background-color: #fff;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -88,6 +181,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
+    width: 100%;
     transform: translate(-50%, -50%);
     text-align: center;
     color: #fff;
