@@ -20,6 +20,7 @@ function UploadPostDialog({ isOpen, onClose }) {
     const book_category = event.target[2].value;
     const book_publication = event.target[3].value;
     const book_image = event.target[4].files[0];
+    const book_description = event.target[5].value;
 
     try {
       if (book_image === undefined) {
@@ -36,6 +37,7 @@ function UploadPostDialog({ isOpen, onClose }) {
               category: book_category,
               author: book_author,
               publication: book_publication,
+              description: book_description,
               postedUserId: currentUser.uid,
               postedUser: currentUser.displayName,
               postUrl: imgUrl,
@@ -136,6 +138,12 @@ function UploadPostDialog({ isOpen, onClose }) {
                 {bookName ? `Book: ${bookName}` : 'Upload Book Image'}
               </span>
             </label>
+            <textarea
+              id="postDescription"
+              name="postDescription"
+              placeholder="Short Description"
+              required
+            />
 
             <div className="btn-collection">
               <button type="button" className="cancel" onClick={onClose}>
