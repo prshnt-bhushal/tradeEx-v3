@@ -11,6 +11,7 @@ import NoPage from './pages/NoPage';
 import Layout from './components/Layout';
 import { AuthContext } from './contexts/AuthContext';
 import BookDetails from './components/BookDetails';
+import EditBook from './components/EditBook';
 
 const App = () => {
   const { currentUser } = useContext(AuthContext);
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="book/:id" element={<BookDetails />} />
+          <Route path="edit-book/:id" element={<EditBook />} />
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<About />} />
           <Route

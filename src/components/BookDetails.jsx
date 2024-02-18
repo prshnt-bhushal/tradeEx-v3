@@ -116,9 +116,11 @@ function BookDetails() {
       console.error('Error deleting book:', error);
     }
   };
+
   const handleEdit = () => {
-    console.log('Feature Updatinnng...');
+    navigate(`/edit-book/${book.id}`);
   };
+
   const handleMessage = () => {
     if (!currentUser) {
       alert('Please login to send a message');
