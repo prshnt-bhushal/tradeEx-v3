@@ -10,6 +10,7 @@ function EditBook() {
     bookName: '',
     category: '',
     author: '',
+    publication: '',
     description: '',
     postUrl: '',
   });
@@ -95,6 +96,13 @@ function EditBook() {
                 type="text"
                 name="author"
                 value={book.author}
+                onChange={handleChange}
+                required
+              />
+              <input
+                type="text"
+                name="publication"
+                value={book.publication}
                 onChange={handleChange}
                 required
               />

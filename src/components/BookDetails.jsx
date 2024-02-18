@@ -143,6 +143,7 @@ function BookDetails() {
             <span>
               {book.category}, {book.author}
             </span>
+            <p>Publication: {book.publication}</p>
             <p>{book.description}</p>
           </div>
           <div className="user-details">
