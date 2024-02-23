@@ -9,6 +9,7 @@ import { FaRegMessage, FaRegUser } from 'react-icons/fa6';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { TbHelpSquare } from 'react-icons/tb';
 import { BiLogOut } from 'react-icons/bi';
+import { toast } from 'react-toastify';
 
 const NavBar = () => {
   const { currentUser } = useContext(AuthContext);
@@ -16,7 +17,7 @@ const NavBar = () => {
 
   function handleLogout() {
     signOut(auth).then(() => {
-      alert('User signed out');
+      toast.success('User signed out');
       navigate('/login');
     });
   }

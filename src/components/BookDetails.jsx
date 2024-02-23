@@ -16,6 +16,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import BookCard from './cards/BookCard';
+import { toast } from 'react-toastify';
 
 function formatDate(timestamp) {
   const milliseconds =
@@ -110,7 +111,7 @@ function BookDetails() {
   const handleDelete = async () => {
     try {
       await deleteDoc(doc(db, 'books', book.id));
-      alert('Book deleted successfully');
+      toast.success('Book deleted successfully');
       navigate('/profile');
     } catch (error) {
       console.error('Error deleting book:', error);
@@ -123,8 +124,7 @@ function BookDetails() {
 
   const handleMessage = () => {
     if (!currentUser) {
-      alert('Please login to send a message');
-      navigate('/login');
+      toast.error('Please login to send a message');
       return;
     }
   };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import { toast } from 'react-toastify';
 
 function EditBook() {
   const { id } = useParams();
@@ -44,7 +45,7 @@ function EditBook() {
     e.preventDefault();
     try {
       await updateDoc(doc(db, 'books', id), book);
-      alert('Book updated successfully');
+      toast.success('Book updated successfully');
       navigate(`/profile`);
     } catch (error) {
       console.error('Error updating book:', error);
