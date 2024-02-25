@@ -7,6 +7,7 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { AuthContext } from '../contexts/AuthContext';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function UploadPostDialog({ isOpen, onClose }) {
   const { currentUser } = useContext(AuthContext);
@@ -47,17 +48,17 @@ function UploadPostDialog({ isOpen, onClose }) {
             const docRef = collection(db, 'books');
             addDoc(docRef, dataObject)
               .then((userRef) => {
-                alert('Product Uploaded Successfully');
+                toast.success('Product Uploaded Successfully');
                 navigate('/profile');
               })
               .catch((error) => {
-                alert(error.message);
+                toast.error('Error adding document: ', error);
                 // setIsLoading(false);
               });
           });
         })
         .catch((error) => {
-          alert(error.message);
+          toast.error('Error uploading image: ', error);
         });
     } catch (error) {
       console.error('Error:', error);
