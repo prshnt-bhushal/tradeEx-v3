@@ -2,29 +2,35 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100vh; 
+  background: linear-gradient(120deg,#8a9eda 10%, #bdbec8 100%);
 
   .formWrapper {
     width: 100%;
     max-width: 400px;
     padding: 20px;
     text-align: center;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    .logo {
-      color: #385667;
+
+    background-color: transparent;
+    
+    border-radius: 25px;
+    box-shadow: 0 0 10px rgba(147, 143, 143, 0.756);
+    img {
+      margin-top: 10px;
+      width: 200px;
+      margin-left: 25px;
     }
     .title {
       margin: 20px 0;
       font-size: 1.5rem;
-      font-weight: 500;
+      font-weight: 600;
       text-transform: uppercase;
+
     }
     form {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 30px;
 
       input {
         padding: 10px;
@@ -39,7 +45,7 @@
           color: #ddd;
         }
         &:focus {
-          border: 2px solid #385667;
+          border: 2px solid #8a9eda;
         }
       }
       p {
@@ -85,18 +91,24 @@
         cursor: pointer;
         transition: 0.3s;
         &:hover {
-          background-color: #2d4453;
+          background-color: #859adb;
         }
       }
+    }
+    label{
+      margin-left: 12px;
+      background-color: #8a9eda;
+      padding: 7px;
+      padding-right: 15px;
+      border-radius: 10px;
     }
     a {
       text-decoration: none;
       color: #2d4453;
       transition: color 0.3s ease;
-      font-size: medium;
-      font-weight: 400;
+      font-size: 1.05rem;
+      font-weight: 500;
       &:hover {
-        text-decoration: underline;
         color: #617b8d;
       }
     }

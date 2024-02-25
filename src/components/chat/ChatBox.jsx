@@ -5,7 +5,7 @@ import Chats from './Chats';
 function ChatBox() {
   return (
     <div className="chatBox">
-      <div className="title">Kura</div>
+      <div className="title">Chat Box</div>
       <UserSearch />
       <Chats />
     </div>

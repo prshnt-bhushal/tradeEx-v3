@@ -2,9 +2,10 @@
   height: 92vh;
   align-items: center;
   justify-content: center;
+  
   .messageWrapper {
     display: flex;
-    // align-items: center;
+    //align-items: center;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -12,32 +13,36 @@
       flex: 1;
       padding: 15px;
       overflow-y: scroll;
-      background-color: #cecece;
+      background-color: #45619b;
+      
       .title {
         font-weight: bold;
         font-size: 1.5rem;
+        color: #9096d7;
         margin-bottom: 10px;
-        color: white;
         width: fit-content;
         cursor: pointer;
         &:hover {
-          color: #000;
+          color: #071941;
         }
       }
       .chats {
         .userChat {
           display: flex;
+          margin-top: 15px;
           align-items: center;
           gap: 10px;
           padding: 10px;
-          color: #fff;
+          border-radius: 10px;
+          background-color:  #3950afea;
+          color: #bdbec8;
           cursor: pointer;
           &:hover {
-            background-color: #a2a2a2;
+            border: 1px solid #a2a2a2;
           }
           img {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             object-fit: cover;
             border: 1px solid #fff;
@@ -51,7 +56,7 @@
             p {
               font-size: 14px;
               font-weight: 300;
-              color: grey;
+              color: rgb(185, 191, 201);
             }
           }
         }
@@ -113,26 +118,27 @@
       }
     }
     .chatWindow {
-      flex: 2;
+      flex: 3;
       .messageTitle {
-        // width: 100%;
-        background-color: #bdbdbd;
+        width: 100%;
+       background-color: #d2d5e1;
         padding: 15px;
-        font-weight: normal;
-        font-size: 1.5rem;
-        color: white;
+        font-weight: 900px;
+        border-radius: 10px 0 0 10px;
+        font-size: 1.30rem;
+        color: rgb(77, 137, 216);
       }
       .conversation {
         height: calc(100% - 130px);
         overflow-y: scroll;
         .message {
           display: flex;
-          gap: 10px;
+          gap: 3px;
           align-items: center;
           .messageInfo {
             display: flex;
             flex-direction: column;
-            color: grey;
+            color: rgb(20, 19, 22);
             font-weight: 200;
             padding: 2px;
             gap: 5px;
@@ -164,7 +170,7 @@
             .messageContent {
               align-items: flex-end;
               p {
-                background-color: #8da4f1;
+                background-color: #3950afea;
                 color: white;
                 border-radius: 10px 0px 10px 10px;
               }
@@ -173,7 +179,7 @@
         }
       }
       .sendMessage {
-        height: 50px;
+        height: 40px;
         padding: 10px;
         align-items: center;
         background-color: white;
@@ -192,7 +198,7 @@
             color: #ddd;
           }
           &:focus {
-            border: 2px solid #385667;
+            border: 2px solid black;
           }
         }
         label {
@@ -201,8 +207,8 @@
           padding-right: 10px;
         }
         button {
-          padding: 10px 15px;
-          background-color: #385667;
+          padding: 15px 20px;
+          background-color: #1e2b81;
           color: white;
           border: none;
           border-radius: 5px;
@@ -210,7 +216,7 @@
           font-weight: 300;
           cursor: pointer;
           &:hover {
-            background-color: #2b3a4d;
+            background-color: #888ca1;
           }
         }
       }

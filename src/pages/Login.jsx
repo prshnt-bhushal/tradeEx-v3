@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaCameraRetro, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
+import logo from '../assets/img/logo.png';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const Login = () => {
@@ -25,11 +26,16 @@ const Login = () => {
       setErr(true);
     }
   };
+  
+
+  
 
   return (
     <div className="formContainer">
       <div className="formWrapper">
-        <h1 className="logo">TradeEx</h1>
+      <Link to="/">
+        <img src={logo} alt="logo" />
+      </Link>
         <h2 className="title">Sign In</h2>
         <form onSubmit={handleSubmit}>
           <input type="email" placeholder="email" required />
@@ -50,6 +56,7 @@ const Login = () => {
               />
             )}
           </div>
+          
           <p>Forgot Password ?</p>
           <button>Sign In</button>
           {err && <p className="error">Something went wrong</p>}

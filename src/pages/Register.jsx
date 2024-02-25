@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { FaCameraRetro, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth, db, storage } from '../firebase';
+import logo from '../assets/img/logo.png';
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import { doc, setDoc } from 'firebase/firestore';
 const Register = () => {
@@ -65,7 +66,9 @@ const Register = () => {
   return (
     <div className="formContainer">
       <div className="formWrapper">
-        <h1 className="logo">TradeEx</h1>
+      <Link to="/">
+        <img src={logo} alt="logo" />
+      </Link>
         <h2 className="title">Sign up</h2>
         <form onSubmit={handleSubmit}>
           <input required type="text" placeholder="username" />
@@ -100,7 +103,7 @@ const Register = () => {
             <span>
               {avatarFileName
                 ? `Avatar: ${avatarFileName}`
-                : 'Choose any Avatar'}
+                : 'User Icon'}
             </span>
           </label>
           <button>Sign up</button>

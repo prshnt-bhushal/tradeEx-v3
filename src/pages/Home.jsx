@@ -55,7 +55,7 @@ const Home = () => {
   return (
     <div className="HomeContainer">
       <section className="Banner">
-        <h1>Bookstore</h1>
+        <h1>Book Store</h1>
         <BookSearch
           setSearchTerm={setSearchTerm}
           sortByRecent={sortByRecent}
