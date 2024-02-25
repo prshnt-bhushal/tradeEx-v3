@@ -85,7 +85,9 @@ const Register = () => {
       )}
       <div className="formContainer">
         <div className="formWrapper">
-          <h1 className="logo">TradeEx</h1>
+          <Link to="/">
+            <img src={logo} alt="logo" className="logo" />
+          </Link>
           <h2 className="title">Sign up</h2>
           <form onSubmit={handleSubmit}>
             <input required type="text" placeholder="username" />

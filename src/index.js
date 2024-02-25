@@ -15,7 +15,7 @@ root.render(
         <App />
         <ToastContainer
           position="top-right"
-          autoClose={5000}
+          autoClose={500}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
@@ -24,8 +24,8 @@ root.render(
           draggable
           pauseOnHover
           theme="light"
+          transition="bounce"
         />
-        
         <ToastContainer />
       </React.StrictMode>
     </ChatContextProvider>

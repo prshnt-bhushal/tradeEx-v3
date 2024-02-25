@@ -5,11 +5,9 @@ import { auth } from '../firebase';
 import logo from '../assets/img/logo.png';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Hourglass } from 'react-loader-spinner';
-import { set } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 const Login = () => {
-  const [err, setErr] = useState(false);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -36,9 +34,6 @@ const Login = () => {
       toast.error(err.code);
     }
   };
-  
-
-  
 
   return (
     <>
@@ -57,7 +52,9 @@ const Login = () => {
       )}
       <div className="formContainer">
         <div className="formWrapper">
-          <h1 className="logo">TradeEx</h1>
+          <Link to="/">
+            <img src={logo} alt="logo" className="logo" />
+          </Link>
           <h2 className="title">Sign In</h2>
           <form onSubmit={handleSubmit}>
             <input type="email" placeholder="email" required />
@@ -80,7 +77,6 @@ const Login = () => {
             </div>
             <p>Forgot Password ?</p>
             <button>Sign In</button>
-            {err && <p className="error">Something went wrong</p>}
           </form>
           <p>
             Don't have an account ? <Link to="/register">Register</Link>
