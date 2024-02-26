@@ -4,19 +4,10 @@ import { IoArrowBack } from 'react-icons/io5';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { FaRegMessage } from 'react-icons/fa6';
-import {
-  doc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  limit,
-  deleteDoc,
-} from 'firebase/firestore';
+import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase';
-import BookCard from './cards/BookCard';
 import { toast } from 'react-toastify';
+import SimilarBooks from './books/SimilarBooks';
 
 function formatDate(timestamp) {
   const milliseconds =
@@ -33,7 +24,6 @@ function BookDetails() {
   const location = useLocation();
   const { book } = location.state;
   const [postedUser, setPostedUser] = useState(null);
-  const [similarBooks, setSimilarBooks] = useState([]);
 
   useEffect(() => {
     const fetchPostedUser = async () => {
@@ -54,59 +44,6 @@ function BookDetails() {
 
     fetchPostedUser();
   }, [book.postedUserId]);
-
-  useEffect(() => {
-    const fetchSimilarBooks = async () => {
-      try {
-        // Query books by the same user
-        const userBooksQuery = query(
-          collection(db, 'books'),
-          where('postedUserId', '==', book.postedUserId),
-          where('id', '!=', book.id), // Exclude the current book
-          limit(4) // Limit to 4 books
-        );
-        const userBooksSnapshot = await getDocs(userBooksQuery);
-        let similarBooksData = [];
-        userBooksSnapshot.forEach((doc) => {
-          similarBooksData.push(doc.data());
-        });
-
-        // If not enough similar books found, query books with the same author
-        if (similarBooksData.length < 4) {
-          const authorBooksQuery = query(
-            collection(db, 'books'),
-            where('author', '==', book.author),
-            where('id', '!=', book.id),
-            limit(4 - similarBooksData.length) // Limit to remaining books
-          );
-          const authorBooksSnapshot = await getDocs(authorBooksQuery);
-          authorBooksSnapshot.forEach((doc) => {
-            similarBooksData.push(doc.data());
-          });
-        }
-
-        // If still not enough similar books found, query books in the same category
-        if (similarBooksData.length < 4) {
-          const categoryBooksQuery = query(
-            collection(db, 'books'),
-            where('category', '==', book.category),
-            where('id', '!=', book.id),
-            limit(4 - similarBooksData.length) // Limit to remaining books
-          );
-          const categoryBooksSnapshot = await getDocs(categoryBooksQuery);
-          categoryBooksSnapshot.forEach((doc) => {
-            similarBooksData.push(doc.data());
-          });
-        }
-
-        setSimilarBooks(similarBooksData);
-      } catch (error) {
-        console.error('Error fetching similar books:', error);
-      }
-    };
-
-    fetchSimilarBooks();
-  }, [book.postedUserId, book.author, book.category, book.id]);
 
   const handleDelete = async () => {
     try {
@@ -173,11 +110,8 @@ function BookDetails() {
           )}
         </div>
       </div>
-      <h2>Similar Books</h2>
       <div className="BookCardContainer">
-        {similarBooks.map((book) => (
-          <BookCard key={book.id} book={book} />
-        ))}
+        <SimilarBooks book={book} />
       </div>
     </div>
   );
