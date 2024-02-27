@@ -12,7 +12,7 @@ function SimilarBooks({ book }) {
   useEffect(() => {
     const fetchSimilarBooks = async () => {
       try {
-        if (!book) return; // Check if book prop exists
+        if (!book) return;
 
         let similarBooksQuery;
 

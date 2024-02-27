@@ -4,10 +4,18 @@ import { IoArrowBack } from 'react-icons/io5';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { FaRegMessage } from 'react-icons/fa6';
-import { doc, getDoc, deleteDoc } from 'firebase/firestore';
+import {
+  doc,
+  getDoc,
+  deleteDoc,
+  updateDoc,
+  serverTimestamp,
+  setDoc,
+} from 'firebase/firestore';
 import { db } from '../firebase';
 import { toast } from 'react-toastify';
 import SimilarBooks from './books/SimilarBooks';
+import { ChatContext } from '../contexts/ChatContext';
 
 function formatDate(timestamp) {
   const milliseconds =
@@ -20,10 +28,12 @@ function formatDate(timestamp) {
 
 function BookDetails() {
   const { currentUser } = useContext(AuthContext);
+  const { dispatch } = useContext(ChatContext);
   const navigate = useNavigate();
   const location = useLocation();
   const { book } = location.state;
   const [postedUser, setPostedUser] = useState(null);
+  console.log('postedUser', postedUser);
 
   useEffect(() => {
     const fetchPostedUser = async () => {
@@ -59,10 +69,56 @@ function BookDetails() {
     navigate(`/edit-book/${book.id}`);
   };
 
-  const handleMessage = () => {
+  const handleMessage = async () => {
     if (!currentUser) {
       toast.error('Please login to send a message');
       return;
+    } else {
+      try {
+        const combinedId =
+          currentUser.uid > book.postedUserId
+            ? currentUser.uid + book.postedUserId
+            : book.postedUserId + currentUser.uid;
+
+        const res = await getDoc(doc(db, 'chats', combinedId));
+
+        // create chat if it doesn't exist
+        if (!res.exists()) {
+          await setDoc(doc(db, 'chats', combinedId), {
+            messages: [],
+          });
+
+          // create user chats
+          await updateDoc(doc(db, 'userChats', currentUser.uid), {
+            [combinedId + '.userId']: {
+              uid: book.postedUserId,
+              displayName: postedUser.displayName,
+              photoURL: postedUser.photoURL,
+            },
+            [combinedId + '.date']: serverTimestamp(),
+          });
+          await updateDoc(doc(db, 'userChats', book.postedUserId), {
+            [combinedId + '.userId']: {
+              uid: currentUser.uid,
+              displayName: currentUser.displayName,
+              photoURL: currentUser.photoURL,
+            },
+            [combinedId + '.date']: serverTimestamp(),
+          });
+        }
+
+        dispatch({
+          type: 'UPDATE_CHAT',
+          payload: {
+            chatId: combinedId,
+            user: postedUser,
+          },
+        });
+
+        navigate(`/messages`);
+      } catch (error) {
+        console.error('Error creating chat:', error);
+      }
     }
   };
 
