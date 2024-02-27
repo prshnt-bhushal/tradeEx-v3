@@ -12,6 +12,7 @@ import Layout from './components/Layout';
 import { AuthContext } from './contexts/AuthContext';
 import BookDetails from './components/BookDetails';
 import EditBook from './components/EditBook';
+import ChooseOption from './components/ChooseOption';
 
 const App = () => {
   const { currentUser } = useContext(AuthContext);
@@ -31,6 +32,7 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="book/:id" element={<BookDetails />} />
           <Route path="edit-book/:id" element={<EditBook />} />
+          <Route path="/choose-option/:id" element={<ChooseOption />} />
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<About />} />
           <Route

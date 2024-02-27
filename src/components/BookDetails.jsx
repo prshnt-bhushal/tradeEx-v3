@@ -74,51 +74,7 @@ function BookDetails() {
       toast.error('Please login to send a message');
       return;
     } else {
-      try {
-        const combinedId =
-          currentUser.uid > book.postedUserId
-            ? currentUser.uid + book.postedUserId
-            : book.postedUserId + currentUser.uid;
-
-        const res = await getDoc(doc(db, 'chats', combinedId));
-
-        // create chat if it doesn't exist
-        if (!res.exists()) {
-          await setDoc(doc(db, 'chats', combinedId), {
-            messages: [],
-          });
-
-          // create user chats
-          await updateDoc(doc(db, 'userChats', currentUser.uid), {
-            [combinedId + '.userId']: {
-              uid: book.postedUserId,
-              displayName: postedUser.displayName,
-              photoURL: postedUser.photoURL,
-            },
-            [combinedId + '.date']: serverTimestamp(),
-          });
-          await updateDoc(doc(db, 'userChats', book.postedUserId), {
-            [combinedId + '.userId']: {
-              uid: currentUser.uid,
-              displayName: currentUser.displayName,
-              photoURL: currentUser.photoURL,
-            },
-            [combinedId + '.date']: serverTimestamp(),
-          });
-        }
-
-        dispatch({
-          type: 'UPDATE_CHAT',
-          payload: {
-            chatId: combinedId,
-            user: postedUser,
-          },
-        });
-
-        navigate(`/messages`);
-      } catch (error) {
-        console.error('Error creating chat:', error);
-      }
+      navigate(`/choose-option/${book.id}`);
     }
   };
 
