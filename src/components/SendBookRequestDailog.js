@@ -59,7 +59,7 @@ function SendBookRequestDialog({
       }
 
       // Dispatch action to update the chat with default message
-      const defaultMessage = `Hi ${requestedBook.postedUser.displayName}, I want to exchange your book ${requestedBook.bookName} with my ${selectedBook.bookName}, it is an amazing book written by ${selectedBook.author}. Please let me know if you are interested. Thanks!`;
+      const defaultMessage = `Hi ${requestedBook.postedUser}, I want to exchange your book ${requestedBook.bookName} with my ${selectedBook.bookName}, it is an amazing book written by ${selectedBook.author}. Please let me know if you are interested. Thanks!`;
 
       await updateDoc(doc(db, 'chats', combinedId), {
         messages: [
@@ -95,7 +95,7 @@ function SendBookRequestDialog({
               placeholder="Enter your message..."
               className="message-input"
               readOnly // Make the textarea read-only to prevent user input
-              value={`Hi ${requestedBook.postedUser.displayName}, I want to exchange your book ${requestedBook.bookName} with my ${selectedBook.bookName}, it is an amazing book written by ${selectedBook.author}. Please let me know if you are interested. Thanks!`}
+              value={`Hi ${requestedBook.postedUser}, I want to exchange your book ${requestedBook.bookName} with my ${selectedBook.bookName}, it is an amazing book written by ${selectedBook.author}. Please let me know if you are interested. Thanks!`}
             />
             <div className="btn-collection">
               <button type="button" className="cancel" onClick={onClose}>
