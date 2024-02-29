@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SendBookRequestDailog from '../SendBookRequestDailog';
 
-function BookCard({ book, selected }) {
+function BookCard({ book, requestedBook }) {
   const navigate = useNavigate();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -15,7 +15,7 @@ function BookCard({ book, selected }) {
   };
 
   const handleBookClick = () => {
-    if (selected) {
+    if (requestedBook) {
       openDialog();
     } else {
       navigate(`/book/${book.id}`, { state: { book } });
@@ -32,10 +32,14 @@ function BookCard({ book, selected }) {
           <p className="product-category">{book.category}</p>
         </div>
       </div>
-      <SendBookRequestDailog
-        isOpen={isDialogOpen}
-        onClose={closeUploadDialog}
-      />
+      {requestedBook && (
+        <SendBookRequestDailog
+          isOpen={isDialogOpen}
+          onClose={closeUploadDialog}
+          requestedBook={requestedBook}
+          selectedBook={book}
+        />
+      )}
     </>
   );
 }

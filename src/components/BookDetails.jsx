@@ -74,7 +74,9 @@ function BookDetails() {
       toast.error('Please login to send a message');
       return;
     } else {
-      navigate(`/choose-option/${book.id}`);
+      navigate(`/choose-option/${book.id}`, {
+        state: { 'requestedBook': book },
+      });
     }
   };
 

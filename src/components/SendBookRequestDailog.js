@@ -1,27 +1,84 @@
 import React, { useContext, useState } from 'react';
 import { Dialog } from '@headlessui/react';
-import { FaCameraRetro } from 'react-icons/fa';
-// import BookCategoryList from './BookCategoryList';
-import { db, storage } from '../firebase';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { AuthContext } from '../contexts/AuthContext';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import {
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
+import { db } from '../firebase';
 
-function SendBookRequestDialog({ isOpen, onClose }) {
+function SendBookRequestDialog({
+  isOpen,
+  onClose,
+  requestedBook,
+  selectedBook,
+}) {
   const { currentUser } = useContext(AuthContext);
-  const [message, setMessage] = useState(
-    "Hi there! I noticed your book and I'm interested in exchanging it with mine. Would you be open to discussing further?"
-  );
-
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Perform your logic here, such as sending the message
-    // For demonstration purposes, let's just log the message
-    console.log('Message sent:', message);
+
+    try {
+      // Create or update the chat
+      const combinedId =
+        currentUser.uid > requestedBook.postedUserId
+          ? currentUser.uid + requestedBook.postedUserId
+          : requestedBook.postedUserId + currentUser.uid;
+
+      const res = await getDoc(doc(db, 'chats', combinedId));
+
+      // create chat if it doesn't exist
+      if (!res.exists()) {
+        await setDoc(doc(db, 'chats', combinedId), {
+          messages: [],
+        });
+
+        // create user chats
+        await updateDoc(doc(db, 'userChats', currentUser.uid), {
+          [combinedId + '.userId']: {
+            uid: requestedBook.postedUserId,
+            displayName: requestedBook.postedUser.displayName,
+            photoURL: requestedBook.postedUser.photoURL,
+          },
+          [combinedId + '.date']: serverTimestamp(),
+        });
+        await updateDoc(doc(db, 'userChats', requestedBook.postedUserId), {
+          [combinedId + '.userId']: {
+            uid: currentUser.uid,
+            displayName: currentUser.displayName,
+            photoURL: currentUser.photoURL,
+          },
+          [combinedId + '.date']: serverTimestamp(),
+        });
+      }
+
+      // Dispatch action to update the chat with default message
+      const defaultMessage = `Hi ${requestedBook.postedUser.displayName}, I want to exchange your book ${requestedBook.bookName} with my ${selectedBook.bookName}, it is an amazing book written by ${selectedBook.author}. Please let me know if you are interested. Thanks!`;
+
+      await updateDoc(doc(db, 'chats', combinedId), {
+        messages: [
+          {
+            sender: currentUser.uid,
+            message: defaultMessage,
+            timestamp: serverTimestamp(),
+          },
+        ],
+      });
+
+      // Navigate to messages page
+      navigate(`/messages`);
+    } catch (error) {
+      console.error('Error sending book request:', error);
+      toast.error('Failed to send book request');
+    }
+
+    // Close the dialog
     onClose();
   };
 
@@ -35,10 +92,10 @@ function SendBookRequestDialog({ isOpen, onClose }) {
 
           <form onSubmit={handleSubmit}>
             <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
               placeholder="Enter your message..."
               className="message-input"
+              readOnly // Make the textarea read-only to prevent user input
+              value={`Hi ${requestedBook.postedUser.displayName}, I want to exchange your book ${requestedBook.bookName} with my ${selectedBook.bookName}, it is an amazing book written by ${selectedBook.author}. Please let me know if you are interested. Thanks!`}
             />
             <div className="btn-collection">
               <button type="button" className="cancel" onClick={onClose}>

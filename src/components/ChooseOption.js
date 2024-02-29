@@ -3,13 +3,15 @@ import { AuthContext } from '../contexts/AuthContext';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import BookCard from '../components/cards/BookCard';
-import { Link, useParams } from 'react-router-dom';
-import { IoArrowBack } from 'react-icons/io5';
+import { useLocation } from 'react-router-dom';
 
 const ChooseOption = () => {
   const { currentUser } = useContext(AuthContext);
   const [postedBooks, setPostedBooks] = useState([]);
-  const { bookId } = useParams(); // Extracting bookId from URL params
+  const location = useLocation();
+  const { requestedBook } = location.state;
+
+  console.log(requestedBook);
 
   useEffect(() => {
     const getPostedBooks = () => {
@@ -34,15 +36,16 @@ const ChooseOption = () => {
   return (
     <div className="HomeContainer">
       <div className="profile-wrapper">
-        {/* <Link to={`/book/${bookId}`} className="backButton">
-          <IoArrowBack size={24} />
-        </Link> */}
         <div className="HomeContainer">
           <h2>Select Book for Exchange</h2>
           <div className="BookContainer">
             {postedBooks.length > 0 ? (
               postedBooks.map((book) => (
-                <BookCard selected={true} key={book.id} book={book} />
+                <BookCard
+                  key={book.id}
+                  book={book}
+                  requestedBook={requestedBook}
+                />
               ))
             ) : (
               <p>No books uploaded yet</p>
