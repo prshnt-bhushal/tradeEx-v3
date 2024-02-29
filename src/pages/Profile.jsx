@@ -29,7 +29,6 @@ const Profile = () => {
 
     currentUser.uid && getPostedBooks();
   }, [currentUser.uid]);
-  console.log(postedBooks);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const openDialog = () => {

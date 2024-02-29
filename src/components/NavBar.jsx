@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/img/logo.png';
+import default_img from '../assets/img/default_profile.png';
 import { AuthContext } from '../contexts/AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
@@ -38,6 +39,10 @@ const NavBar = () => {
                   src={currentUser.photoURL}
                   alt="user"
                   className="user-img"
+                  onProgress={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = default_img;
+                  }}
                 />
               </Menu.Button>
               <Menu.Items className="custom-menu-items">

@@ -6,13 +6,11 @@ import { db, storage } from '../firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { AuthContext } from '../contexts/AuthContext';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 function UploadPostDialog({ isOpen, onClose }) {
   const { currentUser } = useContext(AuthContext);
   const [bookName, setBookName] = useState(null);
-  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -49,7 +47,7 @@ function UploadPostDialog({ isOpen, onClose }) {
             addDoc(docRef, dataObject)
               .then((userRef) => {
                 toast.success('Product Uploaded Successfully');
-                navigate('/profile');
+                // navigate('/profile');
               })
               .catch((error) => {
                 toast.error('Error adding document: ', error);

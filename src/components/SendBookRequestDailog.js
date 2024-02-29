@@ -1,9 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
+  Timestamp,
+  arrayUnion,
   doc,
   getDoc,
   serverTimestamp,
@@ -11,6 +13,9 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { db } from '../firebase';
+import { v4 as uuid } from 'uuid';
+import { ChatContext } from '../contexts/ChatContext';
+import { getUser } from '../helpers/shared';
 
 function SendBookRequestDialog({
   isOpen,
@@ -19,7 +24,28 @@ function SendBookRequestDialog({
   selectedBook,
 }) {
   const { currentUser } = useContext(AuthContext);
+  const { dispatch } = useContext(ChatContext);
+  const [postedUser, setPostedUser] = useState(null);
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const defaultMessage = `Hi ${requestedBook.postedUser}, I want to exchange your '${requestedBook.bookName}' with my '${selectedBook.bookName}', it is an amazing book written by ${selectedBook.author}. Please let me know if you are interested. Thanks!`;
+    setMessage(defaultMessage);
+
+    const fetchPostedUser = async () => {
+      try {
+        getUser(requestedBook.postedUserId).then((user) => {
+          setPostedUser(user);
+        });
+      } catch (error) {
+        console.log('Error getting document:', error);
+      }
+    };
+    fetchPostedUser();
+  }, [requestedBook, selectedBook]);
+
+  console.log(requestedBook);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -43,8 +69,8 @@ function SendBookRequestDialog({
         await updateDoc(doc(db, 'userChats', currentUser.uid), {
           [combinedId + '.userId']: {
             uid: requestedBook.postedUserId,
-            displayName: requestedBook.postedUser.displayName,
-            photoURL: requestedBook.postedUser.photoURL,
+            displayName: postedUser.displayName,
+            photoURL: postedUser.photoURL,
           },
           [combinedId + '.date']: serverTimestamp(),
         });
@@ -59,26 +85,53 @@ function SendBookRequestDialog({
       }
 
       // Dispatch action to update the chat with default message
-      const defaultMessage = `Hi ${requestedBook.postedUser}, I want to exchange your book ${requestedBook.bookName} with my ${selectedBook.bookName}, it is an amazing book written by ${selectedBook.author}. Please let me know if you are interested. Thanks!`;
+
+      // await updateDoc(doc(db, 'chats', combinedId), {
+      //   messages: [
+      //     {
+      //       senderId: currentUser.uid,
+      //       text: message,
+      //       timestamp: serverTimestamp(),
+      //     },
+      //   ],
+      // });
 
       await updateDoc(doc(db, 'chats', combinedId), {
-        messages: [
-          {
-            sender: currentUser.uid,
-            message: defaultMessage,
-            timestamp: serverTimestamp(),
-          },
-        ],
+        messages: arrayUnion({
+          id: uuid(),
+          text: message,
+          senderId: currentUser.uid,
+          date: Timestamp.now(),
+        }),
+      });
+
+      await updateDoc(doc(db, 'userChats', currentUser.uid), {
+        [combinedId + '.lastMessage']: {
+          text: message,
+        },
+        [combinedId + '.date']: serverTimestamp(),
+      });
+      await updateDoc(doc(db, 'userChats', postedUser.uid), {
+        [combinedId + '.lastMessage']: {
+          text: message,
+        },
+        [combinedId + '.date']: serverTimestamp(),
+      });
+
+      dispatch({
+        type: 'UPDATE_CHAT',
+        payload: {
+          chatId: combinedId,
+          currentUser: currentUser,
+          user: postedUser,
+        },
       });
 
       // Navigate to messages page
       navigate(`/messages`);
     } catch (error) {
-      console.error('Error sending book request:', error);
       toast.error('Failed to send book request');
     }
-
-    // Close the dialog
     onClose();
   };
 
@@ -94,8 +147,8 @@ function SendBookRequestDialog({
             <textarea
               placeholder="Enter your message..."
               className="message-input"
-              readOnly // Make the textarea read-only to prevent user input
-              value={`Hi ${requestedBook.postedUser}, I want to exchange your book ${requestedBook.bookName} with my ${selectedBook.bookName}, it is an amazing book written by ${selectedBook.author}. Please let me know if you are interested. Thanks!`}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
             />
             <div className="btn-collection">
               <button type="button" className="cancel" onClick={onClose}>
