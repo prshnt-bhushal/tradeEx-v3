@@ -2,7 +2,7 @@
   height: 92vh;
   align-items: center;
   justify-content: center;
-  
+
   .messageWrapper {
     display: flex;
     //align-items: center;
@@ -14,7 +14,7 @@
       padding: 15px;
       overflow-y: scroll;
       background-color: #45619b;
-      
+
       .title {
         font-weight: bold;
         font-size: 1.5rem;
@@ -32,9 +32,11 @@
           margin-top: 15px;
           align-items: center;
           gap: 10px;
+          height: 72px;
+          overflow: hidden;
           padding: 10px;
           border-radius: 10px;
-          background-color:  #3950afea;
+          background-color: #3950afea;
           color: #bdbec8;
           cursor: pointer;
           &:hover {
@@ -55,6 +57,8 @@
             }
             p {
               font-size: 14px;
+              height: 18px;
+              overflow: hidden;
               font-weight: 300;
               color: rgb(185, 191, 201);
             }
@@ -121,11 +125,11 @@
       flex: 3;
       .messageTitle {
         width: 100%;
-       background-color: #d2d5e1;
+        background-color: #d2d5e1;
         padding: 15px;
         font-weight: 900px;
         border-radius: 10px 0 0 10px;
-        font-size: 1.30rem;
+        font-size: 1.3rem;
         color: rgb(77, 137, 216);
       }
       .conversation {
