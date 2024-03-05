@@ -8,6 +8,7 @@ import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import { doc, setDoc } from 'firebase/firestore';
 import { Hourglass } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
+// import { Toast } from 'react-toastify/dist/components';
 const Register = () => {
   const [err, setErr] = useState(false);
   const navigate = useNavigate();
@@ -32,11 +33,23 @@ const Register = () => {
     const password = event.target[2].value;
     const avatar = event.target[3].files[0];
 
+    if (username.length !== 5 || /\./.test(username)) {
+      setErr(true);
+      toast.error('username must be of 5 letters and cannot be dots');
+      return;
+    }
+    if (password.length < 8) {
+      setErr(true);
+      toast.error('Password must be at least 8 characters long');
+      return;
+    }
     try {
       // Create user with email and password
       // Upload avatar
       if (avatar === undefined) {
-        return setErr(true);
+        setErr(true);
+        toast.error('please select an image');
+        return;
       }
       setIsLoading(true);
       const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -113,7 +126,6 @@ const Register = () => {
               style={{ display: 'none' }}
               type="file"
               id="avatar"
-              required
               accept=".jpg, .jpeg, .png, .gif"
               onChange={handleFileChange}
             />
